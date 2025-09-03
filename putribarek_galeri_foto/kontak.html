@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Kontak Putri</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f8f9fa;
+            text-align: center;
+            padding-top: 50px;
+        }
+
+        .card {
+            display: inline-block;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            padding: 20px 30px;
+            max-width: 300px;
+        }
+
+        .card h2 {
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .number {
+            font-size: 20px;
+            color: #007BFF;
+            cursor: pointer;
+        }
+
+        .copy-msg {
+            margin-top: 10px;
+            color: green;
+            font-size: 14px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="card">
+        <h2>Nama: Putri</h2>
+        <p class="number" onclick="salinNomor()">082255058167</p>
+        <div class="copy-msg" id="copyMsg">Nomor disalin ke clipboard!</div>
+    </div>
+
+    <script>
+        function salinNomor() {
+            const nomor = "082255058167";
+            navigator.clipboard.writeText(nomor).then(() => {
+                const msg = document.getElementById("copyMsg");
+                msg.style.display = "block";
+                setTimeout(() => {
+                    msg.style.display = "none";
+                }, 2000);
+            });
+        }
+    </script>
+
+</body>
+</html>
