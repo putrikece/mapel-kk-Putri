@@ -1,0 +1,13 @@
+/* assets/style.css */
+body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;}
+.card { border-radius: 16px;}
+.table thead.table-primary th {background-color: #007bff;color: #fff;}
+.display-6 {font-size: 36px;}
+footer {padding: 20px 0;}
+.container img {border-radius: 6px;background: #fff;padding: 6px;box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.03);}
+.btn {
+    border-radius: 10px;
+    font-weight: 500;
+    transition: transform 0.2s;
+}
+.btn:hover {transform: scale(1.05);}
