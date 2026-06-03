@@ -1,133 +1,168 @@
-<?php
-// Panggil koneksi
-include "koneksi.php";
-
-// Cek koneksi
-if (!isset($koneksi) || !$koneksi) {
-    die("Koneksi database gagal!");
-}
-
-// Data menu
-$cards = [
-    ["judul" => "Kelola Guru", "link" => "guru.php"],
-    ["judul" => "Kelola Kelas", "link" => "kelas.php"],
-    ["judul" => "Kelola Mapel", "link" => "mapel.php"],
-    ["judul" => "Kelola Siswa", "link" => "siswa.php"]
-];
-
-// Query data
-$query = "SELECT * FROM guru";
-$result = mysqli_query($koneksi, $query);
-
-// Cek query
-if (!$result) {
-    die("Query error: " . mysqli_error($koneksi));
-}
-?>
-
 <!DOCTYPE html>
-<html>
+<html lang="id">
 <head>
-    <title>Dashboard Sekolah</title>
-    <style>
-        body {
-            font-family: Arial;
-            background: #f4f6f8;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-        .container {
-            padding: 20px;
-        }
+<title>Dashboard Sekolah</title>
 
-        .cards {
-            display: flex;
-            gap: 15px;
-            margin-bottom: 30px;
-            flex-wrap: wrap;
-        }
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
-        .card {
-            background: #3498db;
-            color: white;
-            padding: 20px;
-            border-radius: 10px;
-            width: 200px;
-            text-align: center;
-            transition: 0.3s;
-        }
+<style>
+body{
+    background:#f3f4f6;
+}
 
-        .card:hover {
-            background: #2980b9;
-        }
+.dashboard-title{
+    font-size:40px;
+    font-weight:bold;
+}
 
-        .card a {
-            color: white;
-            text-decoration: none;
-            font-weight: bold;
-        }
+.card-stat{
+    border:none;
+    border-radius:15px;
+    box-shadow:0 2px 8px rgba(0,0,0,.1);
+}
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            background: white;
-        }
+.card-stat h1{
+    font-size:50px;
+    font-weight:bold;
+}
 
-        th, td {
-            padding: 10px;
-            border: 1px solid #ddd;
-        }
+.menu-btn{
+    border-radius:12px;
+    padding:10px 25px;
+    font-weight:bold;
+}
 
-        th {
-            background: #2c3e50;
-            color: white;
-        }
+.table-container{
+    background:white;
+    border-radius:12px;
+    overflow:hidden;
+    box-shadow:0 2px 8px rgba(0,0,0,.1);
+}
 
-        tr:nth-child(even) {
-            background: #f2f2f2;
-        }
-    </style>
+footer{
+    margin-top:30px;
+    text-align:center;
+    color:#666;
+}
+</style>
+
 </head>
 <body>
 
-<div class="container">
+<div class="container mt-4">
 
-    <!-- MENU -->
-    <div class="cards">
-        <?php foreach ($cards as $c): ?>
-            <div class="card">
-                <a href="<?= $c['link']; ?>">
-                    <?= $c['judul']; ?>
-                </a>
-            </div>
-        <?php endforeach; ?>
+    <!-- Judul -->
+    <div class="d-flex align-items-center mb-4">
+        <img src="https://cdn-icons-png.flaticon.com/512/3135/3135755.png"
+             width="50">
+        <h2 class="ms-3 fw-bold">Dashboard Sekolah</h2>
     </div>
 
-    <!-- TABEL -->
-    <h3>Data Guru</h3>
+    <!-- Statistik -->
+    <div class="row g-3">
 
-    <table>
-        <tr>
-            <th>ID</th>
-            <th>Nama Guru</th>
-            <th>Mata Pelajaran</th>
-            <th>Kelas</th>
-        </tr>
+        <div class="col-md-3">
+            <div class="card card-stat text-center p-3">
+                <h1>1</h1>
+                <p>Siswa</p>
+            </div>
+        </div>
 
-        <?php if (mysqli_num_rows($result) > 0): ?>
-            <?php while ($row = mysqli_fetch_assoc($result)): ?>
-            <tr>
-                <td><?= htmlspecialchars($row['id_guru']); ?></td>
-                <td><?= htmlspecialchars($row['nama']); ?></td>
-                <td><?= htmlspecialchars($row['mata_pelajaran']); ?></td>
-                <td><?= htmlspecialchars($row['id_kelas']); ?></td>
-            </tr>
-            <?php endwhile; ?>
-        <?php else: ?>
-            <tr>
-                <td colspan="4">Data tidak ditemukan</td>
-            </tr>
-        <?php endif; ?>
-    </table>
+        <div class="col-md-3">
+            <div class="card card-stat text-center p-3">
+                <h1>3</h1>
+                <p>Guru</p>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card card-stat text-center p-3">
+                <h1>4</h1>
+                <p>Kelas</p>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card card-stat text-center p-3">
+                <h1>2</h1>
+                <p>Mata Pelajaran</p>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Tombol Menu -->
+    <div class="text-center my-4">
+
+        <a href="guru/index.php"
+           class="btn btn-primary menu-btn">
+           Kelola Guru
+        </a>
+
+        <a href="kelas/index.php"
+           class="btn btn-success menu-btn">
+           Kelola Kelas
+        </a>
+
+        <a href="mapel/index.php"
+           class="btn btn-warning menu-btn">
+           Kelola Mapel
+        </a>
+
+        <a href="siswa/index.php"
+           class="btn btn-info menu-btn text-white">
+           Kelola Siswa
+        </a>
+
+    </div>
+
+    <!-- Tabel Guru -->
+    <div class="table-container">
+
+        <table class="table table-bordered mb-0">
+
+            <thead class="table-primary">
+                <tr>
+                    <th>ID</th>
+                    <th>Nama Guru</th>
+                    <th>Mata Pelajaran</th>
+                    <th>Kelas</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td>Siti Kartika Munawaroh, S.Kom., M.Kom.</td>
+                    <td>RPL</td>
+                    <td>XI RPL 1</td>
+                </tr>
+
+                <tr>
+                    <td>2</td>
+                    <td>Ida Helviana, S.Kom.</td>
+                    <td>DKV</td>
+                    <td>-</td>
+                </tr>
+
+                <tr>
+                    <td>3</td>
+                    <td>Untung Raharjo, S.T</td>
+                    <td>DDPK</td>
+                    <td>XI RPL 1</td>
+                </tr>
+            </tbody>
+
+        </table>
+
+    </div>
+
+    <footer>
+        © 2025 Nama Lengkap Siswa. Putri Barek
+    </footer>
 
 </div>
 

@@ -1,6 +1,18 @@
 <?php
-$koneksi = mysqli_connect('localhost', 'root', '', 'latihan_putri');
+
+// Konfigurasi database
+$host     = "localhost";
+$username = "root";
+$password = "";
+$database = "latihan-putri";
+
+// Membuat koneksi
+$koneksi = mysqli_connect($host, $username, $password, $database);
+
+// Cek koneksi
 if (!$koneksi) {
-    die('Koneksi gagal: ' . mysqli_connect_error());
+    die("Koneksi gagal: " . mysqli_connect_error());
 }
-?>
+
+// Mengatur charset
+mysqli_set_charset($koneksi, "utf8");

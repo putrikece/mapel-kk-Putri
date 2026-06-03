@@ -1,61 +1,4 @@
-<?php 
-include 'config.php';
-
-// ================= TAMBAH DATA =================
-if (isset($_POST['simpan'])) {
-    $nama = mysqli_real_escape_string($koneksi, $_POST['nama_mapel']);
-    $id_guru = mysqli_real_escape_string($koneksi, $_POST['id_guru']);
-
-    $insert = mysqli_query($koneksi, "
-        INSERT INTO mata_pelajaran (nama_mapel, id_guru)
-        VALUES ('$nama', '$id_guru')
-    ");
-
-    if (!$insert) {
-        die("Insert error: " . mysqli_error($koneksi));
-    }
-
-    header("Location: mapel.php");
-    exit;
-}
-
-// ================= HAPUS DATA =================
-if (isset($_GET['hapus'])) {
-    $id = mysqli_real_escape_string($koneksi, $_GET['hapus']);
-
-    $delete = mysqli_query($koneksi, "
-        DELETE FROM mata_pelajaran WHERE id_mapel='$id'
-    ");
-
-    if (!$delete) {
-        die("Delete error: " . mysqli_error($koneksi));
-    }
-
-    header("Location: mapel.php");
-    exit;
-}
-
-// ================= UPDATE DATA =================
-if (isset($_POST['update'])) {
-    $id = mysqli_real_escape_string($koneksi, $_POST['id_mapel']);
-    $nama = mysqli_real_escape_string($koneksi, $_POST['nama_mapel']);
-    $id_guru = mysqli_real_escape_string($koneksi, $_POST['id_guru']);
-
-    $update = mysqli_query($koneksi, "
-        UPDATE mata_pelajaran 
-        SET nama_mapel='$nama', id_guru='$id_guru'
-        WHERE id_mapel='$id'
-    ");
-
-    if (!$update) {
-        die("Update error: " . mysqli_error($koneksi));
-    }
-
-    header("Location: mapel.php");
-    exit;
-}
-?>
-
+<?php include 'config.php'; ?>
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -63,15 +6,16 @@ if (isset($_POST['update'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kelola Mata Pelajaran</title>
 
+    <!-- Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="assets/style.css">
 </head>
-
 <body class="bg-light">
 
 <div class="container py-4">
     <h2 class="mb-4 text-center">Kelola Data Mata Pelajaran</h2>
 
+    <!-- Tombol Navigasi -->
     <div class="d-flex justify-content-between mb-3">
         <a href="index.php" class="btn btn-secondary">← Kembali</a>
         <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalTambah">
@@ -79,9 +23,9 @@ if (isset($_POST['update'])) {
         </button>
     </div>
 
+    <!-- Tabel Data -->
     <div class="card shadow-sm">
         <div class="card-body p-0">
-
             <table class="table table-striped mb-0">
                 <thead class="table-primary">
                     <tr>
@@ -91,9 +35,9 @@ if (isset($_POST['update'])) {
                         <th>Aksi</th>
                     </tr>
                 </thead>
-
                 <tbody>
                 <?php
+                // Ambil data mapel + nama guru
                 $q = mysqli_query($koneksi, "
                     SELECT m.id_mapel, m.nama_mapel, g.nama AS nama_guru
                     FROM mata_pelajaran m
@@ -101,45 +45,76 @@ if (isset($_POST['update'])) {
                     ORDER BY m.id_mapel ASC
                 ");
 
-                if (!$q) {
-                    die("Query error: " . mysqli_error($koneksi));
-                }
-
-                if (mysqli_num_rows($q) == 0) {
-                    echo "<tr><td colspan='4' class='text-center'>Data kosong</td></tr>";
-                } else {
-                    while ($r = mysqli_fetch_assoc($q)) {
-                        echo "<tr>
-                            <td>{$r['id_mapel']}</td>
-                            <td>{$r['nama_mapel']}</td>
-                            <td>" . ($r['nama_guru'] ? $r['nama_guru'] : '<i>Tidak ada guru</i>') . "</td>
-                            <td>
-                                <a href='?hapus={$r['id_mapel']}' 
-                                   class='btn btn-danger btn-sm'
-                                   onclick='return confirm(\"Yakin ingin hapus?\")'>
-                                   Hapus
-                                </a>
-                                <a href='edit.php?id={$r['id_mapel']}' 
-                                   class='btn btn-warning btn-sm'>
-                                   Edit
-                                </a>
-                            </td>
-                        </tr>";
-                    }
+                while ($r = mysqli_fetch_assoc($q)) {
+                    echo "<tr>
+                        <td>{$r['id_mapel']}</td>
+                        <td>{$r['nama_mapel']}</td>
+                        <td>" . ($r['nama_guru'] ?? '<i>Tidak ada guru</i>') . "</td>
+                        <td>
+                            <a href='?hapus={$r['id_mapel']}' 
+                               class='btn btn-danger btn-sm'
+                               onclick='return confirm(\"Yakin ingin hapus?\")'>
+                               Hapus
+                            </a>
+                            <a href='edit.php?id={$r['id_mapel']}' 
+                               class='btn btn-warning btn-sm'>
+                               Edit
+                            </a>
+                        </td>
+                    </tr>";
                 }
                 ?>
                 </tbody>
             </table>
-
         </div>
     </div>
 </div>
+
+<?php
+// ================= TAMBAH DATA =================
+if (isset($_POST['simpan'])) {
+    $nama = $_POST['nama_mapel'];
+    $id_guru = $_POST['id_guru'];
+
+    mysqli_query($koneksi, "
+        INSERT INTO mata_pelajaran (nama_mapel, id_guru)
+        VALUES ('$nama', '$id_guru')
+    ");
+
+    echo "<meta http-equiv='refresh' content='0'>";
+}
+
+// ================= HAPUS DATA =================
+if (isset($_GET['hapus'])) {
+    $id = $_GET['hapus'];
+
+    mysqli_query($koneksi, "
+        DELETE FROM mata_pelajaran WHERE id_mapel='$id'
+    ");
+
+    echo "<meta http-equiv='refresh' content='0;url=mapel.php'>";
+}
+
+// ================= UPDATE DATA =================
+if (isset($_POST['update'])) {
+    $id = $_POST['id_mapel'];
+    $nama = $_POST['nama_mapel'];
+    $id_guru = $_POST['id_guru'];
+
+    mysqli_query($koneksi, "
+        UPDATE mata_pelajaran 
+        SET nama_mapel='$nama', id_guru='$id_guru'
+        WHERE id_mapel='$id'
+    ");
+
+    echo "<meta http-equiv='refresh' content='0;url=mapel.php'>";
+}
+?>
 
 <!-- Modal Tambah -->
 <div class="modal fade" id="modalTambah" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
-
             <div class="modal-header">
                 <h5 class="modal-title">Tambah Mata Pelajaran</h5>
             </div>
@@ -156,7 +131,6 @@ if (isset($_POST['update'])) {
                         $guruList = mysqli_query($koneksi, "
                             SELECT id_guru, nama FROM guru ORDER BY nama ASC
                         ");
-
                         while ($g = mysqli_fetch_assoc($guruList)) {
                             echo "<option value='{$g['id_guru']}'>{$g['nama']}</option>";
                         }
@@ -173,11 +147,11 @@ if (isset($_POST['update'])) {
                     </button>
                 </div>
             </form>
-
         </div>
     </div>
 </div>
 
+<!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>
